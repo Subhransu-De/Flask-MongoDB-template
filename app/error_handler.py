@@ -1,18 +1,18 @@
-from flask import jsonify
+from typing import Tuple
+
+from flask import jsonify, Response
 
 
-def setup_error_handler(app):
+def setup_error_handler(app) -> None:
     @app.errorhandler(Exception)
-    def handle_exception(e):
-        # Default HTTP status code
+    def handle_exception(e) -> Tuple[Response, int]:
         code = 500
         if hasattr(e, "code"):
             code = e.code
 
-        # Log the error
-        # logger.error(f"Error: {e}", exc_info=True)
+        # TODO: Log the error.
+        # TODO: Logging of different types of error is configurable.
 
-        # Response
         response = {
             "message": str(e),
             "error": "Internal Server Error" if code == 500 else "Error",
