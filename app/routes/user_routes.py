@@ -17,8 +17,8 @@ def create():
 def get(user_id):
     user = user_service.get_user(user_id)
     if user:
-        return jsonify(user), 200
-    return jsonify({"message": "User not found"}), 404
+        return jsonify(user.model_dump()), 200
+    return jsonify({"message": f"User with id '{user_id}' not found."}), 404
 
 
 @user_blueprint.get("/")

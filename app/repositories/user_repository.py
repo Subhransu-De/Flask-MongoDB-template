@@ -1,6 +1,7 @@
 from typing import List
 
 from bson import ObjectId
+from bson.errors import InvalidId
 
 from .base_repository import BaseRepository
 from ..models.input.user_input import UserInput
@@ -18,11 +19,15 @@ class UserRepository(BaseRepository):
 
     def find_by_id(self, identifier: str) -> User:
         user: User | None = None
-        user_raw = self.collection.find_one({"_id": ObjectId(identifier)})
-        if user_raw:
-            user_raw["id"] = str(user_raw["_id"])
-            user = User(**user_raw)
-        return user
+        try:
+            user_raw = self.collection.find_one({"_id": ObjectId(identifier)})
+            if user_raw:
+                user_raw["id"] = str(user_raw["_id"])
+                user = User(**user_raw)
+        except InvalidId:
+            pass  # TODO: Exception is eaten up.
+        finally:
+            return user
 
     def find_all(self) -> List[User]:
         users: List[User] = []

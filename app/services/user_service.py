@@ -13,8 +13,12 @@ class UserService:
     def create_user(self, user_input: UserInput) -> UserOutput:
         return UserOutput(**self.repository.create(user_input).model_dump())
 
-    def get_user(self, user_id) -> UserOutput:
-        return UserOutput(**self.repository.find_by_id(user_id).model_dump())
+    def get_user(self, user_id) -> UserOutput | None:
+        user = self.repository.find_by_id(user_id)
+        if user:
+            return UserOutput(**user.model_dump())
+        else:
+            return None
 
     def get_all_users(self) -> List[UserOutput]:
         users: List[UserOutput] = []

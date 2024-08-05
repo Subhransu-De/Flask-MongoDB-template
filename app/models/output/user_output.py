@@ -1,8 +1,10 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class UserOutput(BaseModel):
-    id: str
-    username: str
-    email: str
-    age: int
+    id: Optional[str]
+    username: Optional[str]
+    email: Optional[str]
+    age: Optional[int]
