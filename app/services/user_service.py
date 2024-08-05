@@ -29,8 +29,8 @@ class UserService:
     def update_user(self, user_id, user_data):
         return self.repository.update(user_id, user_data)
 
-    def delete_user(self, user_id):
-        return self.repository.delete(user_id)
+    def delete(self, user_id) -> None:
+        self.repository.delete(user_id)
 
     def get_users_paginated(self, page, per_page):
         return self.repository.find_all_paginated(page, per_page)

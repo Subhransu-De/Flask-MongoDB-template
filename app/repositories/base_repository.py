@@ -22,5 +22,5 @@ class BaseRepository(ABC):
         pass
 
     @abstractmethod
-    def delete(self, identifier):
+    def delete(self, identifier) -> None:
         pass

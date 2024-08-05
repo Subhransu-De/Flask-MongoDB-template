@@ -37,10 +37,8 @@ def update(user_id):
 
 @user_blueprint.delete("/<user_id>")
 def delete(user_id):
-    success = user_service.delete_user(user_id)
-    if success:
-        return jsonify({"message": "User deleted"}), 200
-    return jsonify({"message": "User not found"}), 404
+    user_service.delete(user_id)
+    return jsonify(), 204
 
 
 @user_blueprint.get("/paginated")

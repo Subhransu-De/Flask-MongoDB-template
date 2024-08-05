@@ -42,9 +42,11 @@ class UserRepository(BaseRepository):
         )
         return result.modified_count > 0
 
-    def delete(self, identifier):
-        result = self.collection.delete_one({"_id": ObjectId(identifier)})
-        return result.deleted_count > 0
+    def delete(self, identifier) -> None:
+        try:
+            self.collection.delete_one({"_id": ObjectId(identifier)})
+        except InvalidId:
+            pass
 
     def find_all_paginated(self, page, per_page):
         total = self.collection.count_documents({})
