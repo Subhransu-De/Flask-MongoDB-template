@@ -25,24 +25,23 @@ class RequestFormatter(logging.Formatter):
 
 def setup_logging(app):
     formatter = RequestFormatter(
-        "%(asctime)s [%(levelname)s] %(remote_addr)s requested %(url)s\n"
-        "Headers: %(headers)s\n"
-        "Payload: %(payload)s\n"
-        "Response: %(response)s\n"
-        "Time taken: %(request_time).2f ms\n"
+        "TIME=%(asctime)s "
+        "LOG_LEVEL=[%(levelname)s] "
+        "IP_ADDRESS=%(remote_addr)s "
+        "URL=%(url)s "
+        "HEADERS=%(headers)s "
+        "PAYLOAD=%(payload)s "
+        "RESPONSE=%(response)s "
+        "TIME_TAKEN=%(request_time).2f ms"
     )
-
-    # Create console handler and set level to debug
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setLevel(logging.DEBUG)
     console_handler.setFormatter(formatter)
 
-    # Remove existing handlers and add console handler
     app.logger.handlers.clear()
     app.logger.addHandler(console_handler)
     app.logger.setLevel(app.config["LOG_LEVEL"])
 
-    # Log request info before processing
     @app.before_request
     def log_request_info():
         g.start_time = time()
