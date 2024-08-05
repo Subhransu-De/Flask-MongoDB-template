@@ -3,13 +3,12 @@ from flask import Flask
 from app.config import get_config
 from .database import init_db
 from .error_handler import setup_error_handler
-from .loggin_config import setup_logging
+from .logging_config import setup_logging
 
 
-def create_app(config_name):
+def create_app() -> Flask:
     app = Flask(__name__)
-    config = get_config(config_name)
-    app.config.from_object(config)
+    app.config.from_object(get_config())
     init_db(app)
     setup_logging(app)
     setup_error_handler(app)
@@ -21,7 +20,7 @@ def create_app(config_name):
     return app
 
 
-def register_blueprints(app, blueprints):
+def register_blueprints(app, blueprints) -> None:
     for bp in blueprints:
         url_prefix = f"/api/{bp.url_prefix}" if bp.url_prefix else "/api"
         app.register_blueprint(bp, url_prefix=url_prefix)
