@@ -1,7 +1,6 @@
 import json
 import logging
 import sys
-import uuid
 from time import time
 
 from flask import request, g
@@ -45,7 +44,6 @@ def setup_logging(app):
     @app.before_request
     def log_request_info():
         g.start_time = time()
-        g.trace_id = uuid.uuid4()
 
     @app.after_request
     def log_response_info(response):
@@ -58,7 +56,5 @@ def setup_logging(app):
             "headers": dict(response.headers),
             "data": response.get_data(as_text=True),
         }
-
-        app.logger.info(f"Request completed")
 
         return response
