@@ -56,5 +56,5 @@ def setup_logging(app):
             "headers": dict(response.headers),
             "data": response.get_data(as_text=True),
         }
-
+        app.logger.info(f"Request completed")
         return response
