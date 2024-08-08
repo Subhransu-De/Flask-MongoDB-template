@@ -25,10 +25,7 @@ def get_paginated() -> Tuple[Response, int]:
 
 @user_blueprint.get("/<user_id>")
 def get(user_id) -> Tuple[Response, int]:
-    user = user_service.get(user_id)
-    if user:
-        return jsonify(user.model_dump()), 200
-    return jsonify({"message": f"User with id '{user_id}' not found."}), 404
+    return jsonify(user_service.get(user_id).model_dump()), 200
 
 
 @user_blueprint.post("")

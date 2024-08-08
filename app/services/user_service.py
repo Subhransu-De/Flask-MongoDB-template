@@ -1,6 +1,7 @@
 from typing import List
 
 from ..database import get_db
+from ..exception.not_found_exception import NotFoundException
 from ..models.input.user_input import UserInput
 from ..models.output.user_output import UserOutput
 from ..repositories.user_repository import UserRepository
@@ -27,6 +28,8 @@ class UserService:
         return users
 
     def update(self, user_id, user) -> UserOutput:
+        if self.repository.find_by_id(user_id):
+            raise NotFoundException(f"User with id {user_id} not found.")
         return self.repository.update(user_id, user)
 
     def delete(self, user_id) -> None:
