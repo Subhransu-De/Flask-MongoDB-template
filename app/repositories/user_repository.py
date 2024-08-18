@@ -2,16 +2,18 @@ from typing import List
 
 from bson import ObjectId
 from bson.errors import InvalidId
+from injector import inject
 
-from .base_repository import BaseRepository
+from .. import MongoDatabase
 from ..models.input.user_input import UserInput
 from ..models.user import User
 
 
-class UserRepository(BaseRepository):
-    def __init__(self, database):
-        super().__init__(database)
-        self.collection = self.db.users
+class UserRepository:
+
+    @inject
+    def __init__(self, mongodb: MongoDatabase):
+        self.collection = mongodb.db.users
 
     def create(self, user_input: UserInput) -> User:
         result = self.collection.insert_one(user_input.model_dump())
@@ -20,7 +22,7 @@ class UserRepository(BaseRepository):
     def find_by_id(self, identifier: str) -> User:
         user: User | None = None
         try:
-            user_raw = self.collection.find_one({"_id": ObjectId(identifier)})
+            user_raw = self.collection.find_one(filter={"_id": ObjectId(identifier)})
             if user_raw:
                 user_raw["id"] = str(user_raw["_id"])
                 user = User(**user_raw)
@@ -36,11 +38,11 @@ class UserRepository(BaseRepository):
             users.append(User(**user))
         return users
 
-    def update(self, identifier, data):
+    def update(self, identifier: str, data: UserInput) -> User:
         result = self.collection.update_one(
-            {"_id": ObjectId(identifier)}, {"$set": data}
+            {"_id": ObjectId(identifier)}, {"$set": data.model_dump()}
         )
-        return result.modified_count > 0
+        return self.find_by_id(identifier)
 
     def delete(self, identifier) -> None:
         try:
