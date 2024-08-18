@@ -2,13 +2,26 @@ import logging
 from typing import Tuple
 
 from flask import jsonify, Response
+from pydantic import ValidationError
 
 from app.exception.not_found_exception import NotFoundException
 
 
-# TODO: Log the error.
-# TODO: More descriptive error.
 def setup_error_handler(app) -> None:
+    @app.errorhandler(ValidationError)
+    def handle_bad_request(error: ValidationError):
+        return (
+            jsonify(
+                {
+                    "message": [
+                        f'{err.get("loc")[0]} : {err.get("msg")}'
+                        for err in error.errors()
+                    ]
+                }
+            ),
+            400,
+        )
+
     @app.errorhandler(NotFoundException)
     def handle_not_found(e: NotFoundException) -> Tuple[Response, int]:
         return (
