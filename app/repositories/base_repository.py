@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class BaseRepository(ABC):
-    def __init__(self, database):
-        self.db = database
 
     @abstractmethod
     def create(self, data):
