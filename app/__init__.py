@@ -1,3 +1,5 @@
+from typing import Dict
+
 from flask import Flask
 from injector import singleton, Module, Injector, Binder
 
@@ -11,10 +13,15 @@ from app.services.user_service import UserService
 
 
 class AppModule(Module):
+    __config: Dict
+
+    def __init__(self, config_input: Dict):
+        self.__config = config_input
+
     def configure(self, binder: Binder, **kwargs):
         binder.bind(
             MongoDatabase,
-            to=MongoDatabase("mongodb://localhost:27017", "flask_mongo_template"),
+            to=MongoDatabase(self.__config.get("URI"), self.__config.get("DB_NAME")),
             scope=singleton,
         )
         binder.bind(UserService, to=UserService, scope=singleton)
@@ -24,7 +31,14 @@ class AppModule(Module):
 def create_app() -> Flask:
     app: Flask = Flask(__name__)
     app.config.from_object(get_config())
-    app.config["INJECTOR"]: Injector = Injector(AppModule())
+    app.config["INJECTOR"]: Injector = Injector(
+        AppModule(
+            {
+                "URI": app.config["MONGO_URI"],
+                "DB_NAME": app.config["MONGO_DB_NAME"],
+            }
+        )
+    )
     setup_logging(app)
     setup_error_handler(app)
 
