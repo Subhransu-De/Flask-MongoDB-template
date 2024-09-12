@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "flask-mongodb-template"
+version = "0.1.0"
+description = "An opinionated template for Flask + MongoDB"
+authors = ["Subhransu De <subhransu.de.official@gmail.com>"]
+readme = "README.md"
+keywords = ["Flask", "MongoDB"]
+package-mode = false
+
+[tool.poetry.scripts]
+app = "app"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+Flask = "^3.0.3"
+flask-injector = "^0.15.0"
+mongoengine = "^0.29.0"
+pydantic = "^2.8.2"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.3"
+testcontainers = "^4.8.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
