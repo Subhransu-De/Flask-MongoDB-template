@@ -1,8 +1,7 @@
-from pydantic import BaseModel
+from mongoengine import Document, EmailField, StringField, IntField
 
 
-class User(BaseModel):
-    id: str
-    username: str
-    email: str
-    age: int
+class User(Document):
+    username: str = StringField()
+    email: str = EmailField()
+    age: int = IntField()
