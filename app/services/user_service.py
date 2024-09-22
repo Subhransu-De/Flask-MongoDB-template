@@ -10,7 +10,7 @@ from app.repositories import UserRepository
 class UserService:
     @inject
     def __init__(self, user_repository: UserRepository):
-        self.user_repository = user_repository
+        self._user_repository = user_repository
 
     def create(self, user_input: UserInput) -> UserOutput:
         pass
