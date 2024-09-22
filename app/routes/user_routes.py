@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 from flask import Blueprint, Response, request, jsonify
 from injector import inject
@@ -28,7 +28,8 @@ def get(user_service: UserService, user_id: str) -> Tuple[Response, int]:
 @inject
 @user_blueprint.get("")
 def get_all(user_service: UserService) -> Tuple[Response, int]:
-    pass
+    response: List[UserOutput] = user_service.get_all()
+    return jsonify([res.model_dump(by_alias=True) for res in response]), 200
 
 
 @inject

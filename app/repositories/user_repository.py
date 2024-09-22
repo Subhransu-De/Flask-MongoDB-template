@@ -1,3 +1,5 @@
+from typing import List
+
 from bson import ObjectId
 from mongoengine import ValidationError
 
@@ -18,6 +20,9 @@ class UserRepository:
             return User.objects(id=identifier).first()
         except ValidationError:
             return None
+
+    def get_all(self) -> List[User]:
+        return User.objects()
 
     def find_all_paginated(self, page, per_page) -> User:
         pass

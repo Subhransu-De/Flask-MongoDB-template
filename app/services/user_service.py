@@ -25,7 +25,10 @@ class UserService:
         return UserOutput.from_(fetched_user)
 
     def get_all(self) -> List[UserOutput]:
-        pass
+        return [
+            UserOutput.from_(fetched_user)
+            for fetched_user in self._repository.get_all()
+        ]
 
     def update(self, user_id, user: UserInput) -> UserOutput:
         pass
