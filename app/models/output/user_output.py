@@ -1,10 +1,8 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 
 class UserOutput(BaseModel):
-    id: Optional[str] = Field(serialization_alias="id")
-    username: Optional[str] = Field(serialization_alias="username")
-    email: Optional[str] = Field(serialization_alias="email")
-    age: Optional[int] = Field(serialization_alias="age")
+    id: str = Field(default=None, serialization_alias="id")
+    username: str = Field(default=None, serialization_alias="username")
+    email: str = Field(default=None, serialization_alias="email")
+    age: int = Field(default=None, serialization_alias="age")

@@ -32,3 +32,6 @@ def register_blueprints(app, blueprints) -> None:
     for bp in blueprints:
         url_prefix = f"/api/{bp.url_prefix}" if bp.url_prefix else "/api"
         app.register_blueprint(bp, url_prefix=url_prefix)
+
+
+__all__ = ["create_app"]

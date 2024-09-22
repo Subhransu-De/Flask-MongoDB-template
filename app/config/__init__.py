@@ -33,3 +33,6 @@ def get_config() -> (
         Type[ProductionConfig] | Type[DevelopmentConfig] | Type[TestingConfig]
 ):
     return config.get(os.getenv("FLASK_ENV", DEFAULT_ENVIRONMENT))
+
+
+__all__ = ["get_config"]
