@@ -21,8 +21,8 @@ def create(user_service: UserService) -> Tuple[Response, int]:
 @inject
 @user_blueprint.get("/<user_id>")
 def get(user_service: UserService, user_id: str) -> Tuple[Response, int]:
-    response = user_service.get(user_id)
-    return jsonify(response.model_dump(by_alias=True)), 201
+    response: UserOutput = user_service.get(user_id)
+    return jsonify(response.model_dump(by_alias=True)), 200
 
 
 @inject
