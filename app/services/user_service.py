@@ -13,7 +13,8 @@ class UserService:
         self._user_repository = user_repository
 
     def create(self, user_input: UserInput) -> UserOutput:
-        pass
+        created_user = self._user_repository.create(user_input)
+        return UserOutput.from_(created_user)
 
     def get(self, user_id) -> UserOutput:
         pass

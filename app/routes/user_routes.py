@@ -1,8 +1,9 @@
 from typing import Tuple
 
-from flask import Blueprint, Response
+from flask import Blueprint, Response, request, jsonify
 from injector import inject
 
+from app.models.input import UserInput
 from app.services.user_service import UserService
 
 user_blueprint = Blueprint("user", __name__, url_prefix="users")
@@ -11,7 +12,9 @@ user_blueprint = Blueprint("user", __name__, url_prefix="users")
 @inject
 @user_blueprint.post("")
 def create(user_service: UserService) -> Tuple[Response, int]:
-    pass
+    user_input: UserInput = UserInput(**request.get_json())
+    response = user_service.create(user_input)
+    return jsonify(response.model_dump(by_alias=True)), 201
 
 
 @inject

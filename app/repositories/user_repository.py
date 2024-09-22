@@ -1,12 +1,13 @@
 from bson import ObjectId
 
 from app.models import User
+from app.models.input import UserInput
 
 
 class UserRepository:
 
-    def create(self) -> User:
-        pass
+    def create(self, user_input: UserInput) -> User:
+        return User(**user_input.model_dump()).save()
 
     def update(self) -> User:
         pass
