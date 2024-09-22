@@ -22,6 +22,13 @@ def setup_error_handler(app) -> None:
             400,
         )
 
+    @app.errorhandler(ValueError)
+    def handle_bad_request(error: ValueError):
+        return (
+            jsonify({"message": str(error)}),
+            400,
+        )
+
     @app.errorhandler(NotFoundException)
     def handle_not_found(e: NotFoundException) -> Tuple[Response, int]:
         return (

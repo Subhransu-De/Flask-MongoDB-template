@@ -5,7 +5,7 @@ from injector import inject
 from app.exception import NotFoundException
 from app.models import User
 from app.models.input import UserInput
-from app.models.output import UserOutput
+from app.models.output import UserOutput, Paginated
 from app.repositories import UserRepository
 
 
@@ -30,6 +30,17 @@ class UserService:
             for fetched_user in self._repository.get_all()
         ]
 
+    def get_all_paginated(self, start: int, limit: int) -> Paginated[UserOutput]:
+        return Paginated[UserOutput](
+            items=[
+                UserOutput.from_(res)
+                for res in self._repository.get_all_paginated(start, limit)
+            ],
+            total=self._repository.count(),
+            start=start,
+            limit=limit,
+        )
+
     def update(self, user_id: str, user_input: UserInput) -> UserOutput:
         updated_user: User = self._repository.update(user_id, user_input)
         if updated_user is None:
@@ -38,6 +49,3 @@ class UserService:
 
     def delete(self, user_id) -> None:
         self._repository.delete(user_id)
-
-    def get_paginated(self, page, per_page):
-        pass

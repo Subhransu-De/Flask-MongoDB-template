@@ -29,21 +29,8 @@ class UserRepository:
     def get_all(self) -> List[User]:
         return User.objects()
 
-    def find_all_paginated(self, page, per_page) -> User:
-        pass
-        # total = self.collection.count_documents({})
-        # users = list(self.collection.find().skip((page - 1) * per_page).limit(per_page))
-        #
-        # for user in users:
-        #     user["_id"] = str(user["_id"])
-        #
-        # return {
-        #     "users": users,
-        #     "page": page,
-        #     "per_page": per_page,
-        #     "total": total,
-        #     "pages": (total + per_page - 1),
-        # }
+    def get_all_paginated(self, start: int, limit: int) -> List[User]:
+        return User.objects.skip(start - 1).limit(limit)
 
     def delete(self, identifier: str) -> None:
         try:
@@ -52,3 +39,6 @@ class UserRepository:
                 user.delete()
         except ValidationError:
             return None
+
+    def count(self):
+        return User.objects.count()
