@@ -1,11 +1,7 @@
 import os
 from typing import Type
 
-from dotenv import load_dotenv
-
 DEFAULT_ENVIRONMENT = "dev"
-
-load_dotenv()
 
 
 class Config:
@@ -34,6 +30,6 @@ config = {"prod": ProductionConfig, "dev": DevelopmentConfig, "test": TestingCon
 
 
 def get_config() -> (
-    Type[ProductionConfig] | Type[DevelopmentConfig] | Type[TestingConfig]
+        Type[ProductionConfig] | Type[DevelopmentConfig] | Type[TestingConfig]
 ):
     return config.get(os.getenv("FLASK_ENV", DEFAULT_ENVIRONMENT))
