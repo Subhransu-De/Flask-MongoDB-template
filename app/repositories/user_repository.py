@@ -1,66 +1,44 @@
 from typing import List
 
 from bson import ObjectId
-from bson.errors import InvalidId
-from injector import inject
+from mongoengine import ValidationError
 
-from .. import MongoDatabase
-from ..models.input.user_input import UserInput
-from ..models.user import User
+from app.models import User
+from app.models.input import UserInput
 
 
 class UserRepository:
 
-    @inject
-    def __init__(self, mongodb: MongoDatabase):
-        self.collection = mongodb.db.users
-
     def create(self, user_input: UserInput) -> User:
-        result = self.collection.insert_one(user_input.model_dump())
-        return self.find_by_id(str(result.inserted_id))
+        return User(**user_input.model_dump()).save()
 
-    def find_by_id(self, identifier: str) -> User:
-        user: User | None = None
-        try:
-            user_raw = self.collection.find_one(filter={"_id": ObjectId(identifier)})
-            if user_raw:
-                user_raw["id"] = str(user_raw["_id"])
-                user = User(**user_raw)
-        except InvalidId:
-            pass  # TODO: Exception is eaten up.
-        finally:
-            return user
-
-    def find_all(self) -> List[User]:
-        users: List[User] = []
-        for user in list(self.collection.find()):
-            user["id"] = str(user["_id"])
-            users.append(User(**user))
-        return users
-
-    def update(self, identifier: str, data: UserInput) -> User:
-        result = self.collection.update_one(
-            {"_id": ObjectId(identifier)}, {"$set": data.model_dump()}
+    def update(self, identifier: str | ObjectId, user_input: UserInput) -> User | None:
+        update_config = dict()
+        update_config.update(
+            {f"set__{field}": value for field, value in user_input.model_dump().items()}
         )
+        User.objects(id=identifier).update_one(**update_config)
         return self.find_by_id(identifier)
 
-    def delete(self, identifier) -> None:
+    def find_by_id(self, identifier: str | ObjectId) -> User | None:
         try:
-            self.collection.delete_one({"_id": ObjectId(identifier)})
-        except InvalidId:
-            pass
+            return User.objects(id=identifier).first()
+        except ValidationError:
+            return None
 
-    def find_all_paginated(self, page, per_page):
-        total = self.collection.count_documents({})
-        users = list(self.collection.find().skip((page - 1) * per_page).limit(per_page))
+    def get_all(self) -> List[User]:
+        return User.objects()
 
-        for user in users:
-            user["_id"] = str(user["_id"])
+    def get_all_paginated(self, start: int, limit: int) -> List[User]:
+        return User.objects.skip(start - 1).limit(limit)
 
-        return {
-            "users": users,
-            "page": page,
-            "per_page": per_page,
-            "total": total,
-            "pages": (total + per_page - 1),
-        }
+    def delete(self, identifier: str) -> None:
+        try:
+            user: User = User.objects(id=identifier).only("id").first()
+            if user:
+                user.delete()
+        except ValidationError:
+            return None
+
+    def count(self):
+        return User.objects.count()
