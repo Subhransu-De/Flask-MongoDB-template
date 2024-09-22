@@ -32,12 +32,6 @@ def get_all(user_service: UserService) -> Tuple[Response, int]:
 
 
 @inject
-@user_blueprint.get("/paginated")
-def get_paginated(user_service: UserService, user_id: str) -> Tuple[Response, int]:
-    pass
-
-
-@inject
 @user_blueprint.put("/<user_id>")
 def update(user_service: UserService, user_id: str) -> Tuple[Response, int]:
     pass
