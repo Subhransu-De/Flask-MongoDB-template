@@ -1,4 +1,5 @@
 from bson import ObjectId
+from mongoengine import ValidationError
 
 from app.models import User
 from app.models.input import UserInput
@@ -9,11 +10,14 @@ class UserRepository:
     def create(self, user_input: UserInput) -> User:
         return User(**user_input.model_dump()).save()
 
-    def update(self) -> User:
+    def update(self, identifier: str | ObjectId, user_input: UserInput) -> User:
         pass
 
-    def find_by_id(self, identifier: str | ObjectId) -> User:
-        pass
+    def find_by_id(self, identifier: str | ObjectId) -> User | None:
+        try:
+            return User.objects(id=identifier).first()
+        except ValidationError:
+            return None
 
     def find_all_paginated(self, page, per_page) -> User:
         pass

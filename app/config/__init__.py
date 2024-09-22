@@ -1,7 +1,10 @@
 import os
 from typing import Type
 
+from dotenv import load_dotenv
+
 DEFAULT_ENVIRONMENT = "dev"
+load_dotenv(".env")
 
 
 class Config:

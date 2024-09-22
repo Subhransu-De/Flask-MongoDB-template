@@ -4,6 +4,7 @@ from flask import Blueprint, Response, request, jsonify
 from injector import inject
 
 from app.models.input import UserInput
+from app.models.output import UserOutput
 from app.services.user_service import UserService
 
 user_blueprint = Blueprint("user", __name__, url_prefix="users")
@@ -13,7 +14,14 @@ user_blueprint = Blueprint("user", __name__, url_prefix="users")
 @user_blueprint.post("")
 def create(user_service: UserService) -> Tuple[Response, int]:
     user_input: UserInput = UserInput(**request.get_json())
-    response = user_service.create(user_input)
+    response: UserOutput = user_service.create(user_input)
+    return jsonify(response.model_dump(by_alias=True)), 201
+
+
+@inject
+@user_blueprint.get("/<user_id>")
+def get(user_service: UserService, user_id: str) -> Tuple[Response, int]:
+    response = user_service.get(user_id)
     return jsonify(response.model_dump(by_alias=True)), 201
 
 
@@ -26,12 +34,6 @@ def get_all(user_service: UserService) -> Tuple[Response, int]:
 @inject
 @user_blueprint.get("/paginated")
 def get_paginated(user_service: UserService, user_id: str) -> Tuple[Response, int]:
-    pass
-
-
-@inject
-@user_blueprint.get("/<user_id>")
-def get(user_service: UserService, user_id: str) -> Tuple[Response, int]:
     pass
 
 
