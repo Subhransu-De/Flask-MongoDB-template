@@ -23,7 +23,6 @@ def create_app() -> Flask:
     app.json.sort_keys = False
     connect(app.config.get("MONGO_DB_NAME"), host=app.config.get("MONGO_URI"))
     register_blueprints(app, [user_blueprint])
-    setup_logging(app)
     setup_error_handler(app)
     FlaskInjector(app=app, modules=[AppModule()])
     return app
