@@ -30,8 +30,11 @@ class UserService:
             for fetched_user in self._repository.get_all()
         ]
 
-    def update(self, user_id, user: UserInput) -> UserOutput:
-        pass
+    def update(self, user_id: str, user_input: UserInput) -> UserOutput:
+        updated_user: User = self._repository.update(user_id, user_input)
+        if updated_user is None:
+            raise NotFoundException(f"User with id {user_id} not found.")
+        return UserOutput.from_(updated_user)
 
     def delete(self, user_id) -> None:
         self._repository.delete(user_id)

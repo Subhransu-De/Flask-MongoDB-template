@@ -12,8 +12,13 @@ class UserRepository:
     def create(self, user_input: UserInput) -> User:
         return User(**user_input.model_dump()).save()
 
-    def update(self, identifier: str | ObjectId, user_input: UserInput) -> User:
-        pass
+    def update(self, identifier: str | ObjectId, user_input: UserInput) -> User | None:
+        update_config = dict()
+        update_config.update(
+            {f"set__{field}": value for field, value in user_input.model_dump().items()}
+        )
+        User.objects(id=identifier).update_one(**update_config)
+        return self.find_by_id(identifier)
 
     def find_by_id(self, identifier: str | ObjectId) -> User | None:
         try:

@@ -35,7 +35,9 @@ def get_all(user_service: UserService) -> Tuple[Response, int]:
 @inject
 @user_blueprint.put("/<user_id>")
 def update(user_service: UserService, user_id: str) -> Tuple[Response, int]:
-    pass
+    user_input: UserInput = UserInput(**request.get_json())
+    response: UserOutput = user_service.update(user_id, user_input)
+    return jsonify(response.model_dump(by_alias=True)), 200
 
 
 @inject
