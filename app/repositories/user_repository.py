@@ -34,3 +34,11 @@ class UserRepository:
         #     "total": total,
         #     "pages": (total + per_page - 1),
         # }
+
+    def delete(self, identifier: str) -> None:
+        try:
+            user: User = User.objects(id=identifier).only("id").first()
+            if user:
+                user.delete()
+        except ValidationError:
+            return None

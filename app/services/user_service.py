@@ -31,7 +31,7 @@ class UserService:
         pass
 
     def delete(self, user_id) -> None:
-        pass
+        self._repository.delete(user_id)
 
     def get_paginated(self, page, per_page):
         pass

@@ -46,4 +46,5 @@ def update(user_service: UserService, user_id: str) -> Tuple[Response, int]:
 @inject
 @user_blueprint.delete("/<user_id>")
 def delete(user_service: UserService, user_id: str) -> Tuple[Response, int]:
-    pass
+    user_service.delete(user_id)
+    return jsonify(), 204
