@@ -1,9 +1,10 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from app.models import User
+from .base_output import BaseOutput
 
 
-class UserOutput(BaseModel):
+class UserOutput(BaseOutput):
     id: str = Field(default=None, serialization_alias="id")
     username: str = Field(default=None, serialization_alias="username")
     email: str = Field(default=None, serialization_alias="email")
